@@ -1,0 +1,9 @@
+c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.exe
+c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.pdb
+C:\Users\Fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
