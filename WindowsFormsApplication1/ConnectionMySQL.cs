@@ -113,6 +113,76 @@ namespace WindowsFormsApplication1
         }
 
 
+        public static void InsertSector(string code, string name)
+        {
+            try
+            {
+                string query = "INSERT INTO sectors (code,name) VALUES (@code,@name);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@name", name);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
+        public static void InsertClasificationServiceType(string code, string name)
+        {
+            try
+            {
+                string query = "INSERT INTO clasification_service_types (code,name) VALUES (@code,@name);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@name", name);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
+        public static void InsertMechanismType(string code, string name)
+        {
+            try
+            {
+                string query = "INSERT INTO mechanism_types (code,name) VALUES (@code,@name);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@name", name);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
+        public static void InsertSubMechanismType(string mechanism_type_code, string code, string name)
+        {
+            try
+            {
+                int mechanism_type_id = GetIdFromCode("mechanism_types", mechanism_type_code);
+                string query = "INSERT INTO sub_mechanism_types (mechanism_type_id,code,name) VALUES (@mechanism_type_id,@code,@name);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@mechanism_type_id", mechanism_type_id);
+                command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@name", name);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }   
+
         public static void InsertCategoryService(string code)
         {
             try
@@ -216,10 +286,11 @@ namespace WindowsFormsApplication1
             try
             {
                 int authorization_id = GetIdFromCode("authorizations", authorization_code);
-                string query = "INSERT INTO coverages (authorization_id,code,name,cop_fijo,cop_var) VALUES (@authorization_id,@code,@name,@cop_fijo,@cop_var);";
+                int sub_coverage_type_id = GetIdFromCode("sub_coverages_types", code);
+                string query = "INSERT INTO coverages (authorization_id,sub_coverage_type_id,name,cop_fijo,cop_var) VALUES (@authorization_id,@sub_coverage_type_id,@name,@cop_fijo,@cop_var);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@authorization_id", authorization_id);
-                command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@sub_coverage_type_id", sub_coverage_type_id);
                 command.Parameters.AddWithValue("@name", name);
                 command.Parameters.AddWithValue("@cop_fijo", Convert.ToDecimal(cop_fijo));
                 command.Parameters.AddWithValue("@cop_var", Convert.ToDecimal(cop_var));
@@ -276,6 +347,27 @@ namespace WindowsFormsApplication1
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@code", code);
                 command.Parameters.AddWithValue("@name", name);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
+         
+        public static void InsertSubCoverageType(string coverage_type_code, string fact_code, string name, string code)
+        {
+            try
+            {
+                int coverage_type_id = GetIdFromCode("coverage_types", coverage_type_code);
+                string query = "INSERT INTO coverage_types (code,name, fact_code, coverage_type_id) VALUES (@code,@name,@fact_code,@coverage_type_id);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@fact_code", fact_code);
+                command.Parameters.AddWithValue("@coverage_type_id", coverage_type_id);
                 command.CommandTimeout = 0;
                 command.ExecuteNonQuery();
             }
