@@ -362,7 +362,7 @@ namespace WindowsFormsApplication1
             try
             {
                 int coverage_type_id = GetIdFromCode("coverage_types", coverage_type_code);
-                string query = "INSERT INTO coverage_types (code,name, fact_code, coverage_type_id) VALUES (@code,@name,@fact_code,@coverage_type_id);";
+                string query = "INSERT INTO sub_coverage_types (code,name, fact_code, coverage_type_id) VALUES (@code,@name,@fact_code,@coverage_type_id);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@code", code);
                 command.Parameters.AddWithValue("@name", name);

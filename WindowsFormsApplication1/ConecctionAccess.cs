@@ -134,7 +134,6 @@ namespace WindowsFormsApplication1
             ConnectionMySQL.Connect();
             while (reader.Read())
             {
-                MessageBox.Show(reader.GetString(0));
                 ConnectionMySQL.InsertDigemid(reader.GetString(0), reader.GetString(1), reader.GetValue(2).ToString(), reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetValue(6).ToString(), reader.GetDateTime(7).ToString(),reader.GetString(8), reader.GetString(9));
                 UpdateAfterInsert("ts_catalogodigemid", "cod_prod", 0, reader);
             }
@@ -292,7 +291,7 @@ namespace WindowsFormsApplication1
             while (reader.Read())
             {
                 ConnectionMySQL.InsertCoverageType(reader.GetString(0), reader.GetString(1));
-                UpdateAfterInsert("tipocobertvinctipprest", "codigotipocoberturaprest", 0, reader);
+                UpdateAfterInsert("ts_tipocobertvinctipprest", "codigotipocoberturaprest", 0, reader);
             }
             ConnectionMySQL.Disconnect();
             FinalMessage();
