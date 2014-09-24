@@ -46,7 +46,12 @@ namespace WindowsFormsApplication1
 
         public static void InsertMysql()
         {
-            
+            InsertMysqlCumSunasaProduct();
+            /*
+             * 
+            InsertMysqlCoverageType();
+            InsertMysqlSubCoverageType();
+            InsertMysqlDigemid();
             InsertMysqlAfiliationType();
             InsertMysqlRelationShip();
             InsertMysqlInsurance();
@@ -55,35 +60,14 @@ namespace WindowsFormsApplication1
             InsertMysqlPrice();
             InsertMysqlDiagnosticCategory();
             InsertMysqlDiagnostic();
-            InsertMysqlCoverageType();
-            InsertMysqlSubCoverageType();
+            
             InsertMysqlDigemid();
-            InsertMysqlEan();
             InsertMysqlSector();
             InsertMysqlClasificationServiceType();
             InsertMysqlMechanismType();
             InsertMysqlSubMechanismType();
-            /*
-            InsertMysqlEan();
-            InsertMysqlDigemid();
-            InsertMysqlDiagnostic();
-            InsertMysqlInsurance();
-            InsertMysqlRelationShip();
-            InsertMysqlMoney();
-            InsertMysqlAfiliationType();
-            InsertMysqlAutorization();
-            InsertMysqlServices();            
-            InsertMysqlProcServices();
-            InsertMysqlProcedureType();
-            InsertMysqlAutorization();
-            InsertMysqlCoverageType();
-            InsertMysqlService();
-            InsertMysqlDiagnosticCategory();
-            InsertMysqlDiagnostic();
-            InsertMysqlCoverage();
-            InsertMysqlExclusion();
-            InsertMysqlSpecialProcedure();
-             * 
+            InsertMysqlProduct();
+
             */
         }
 
@@ -95,7 +79,7 @@ namespace WindowsFormsApplication1
         public static void InsertMysqlPrice()
         {
             ConectarTarifario();
-            string query = "select * from tarifario where codigo <> 0 and flag = '0'";
+            string query = "select * from tarifario where codigo <> 0 and flag = '0' order by codigo";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             ConnectionMySQL.Connect();
@@ -114,10 +98,26 @@ namespace WindowsFormsApplication1
             FinalMessage();
         }
 
+        public static void InsertMysqlProduct()
+        {
+            ConectarTarifario();
+            string query = "select * from productos where flag = '0' order by cod_prod";
+            OleDbCommand commandselect = new OleDbCommand(query, Conex);
+            OleDbDataReader reader = commandselect.ExecuteReader();
+            ConnectionMySQL.Connect();
+            while (reader.Read())
+            {
+                ConnectionMySQL.InsertProduct(reader.GetValue(0).ToString(), reader.GetString(1));
+                UpdateAfterInsert("productos", "cod_prod", 0, reader);
+            }
+            ConnectionMySQL.Disconnect();
+            FinalMessage();
+        }
+
         public static void InsertMysqlEan()
         {
             ConectarTedef();
-            string query = "select * from ts_ean13 where flag = '0'   order by codigoean13";
+            string query = "select * from ts_ean13 where flag = '0' order by codigoean13";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             ConnectionMySQL.Connect();
@@ -146,6 +146,22 @@ namespace WindowsFormsApplication1
             FinalMessage();
         }
 
+        public static void InsertMysqlCumSunasaProduct()
+        {
+            ConectarTedef();
+            string query = "select * from ts_producto where flag = '0' order by codigoproducto";
+            OleDbCommand commandselect = new OleDbCommand(query, Conex);
+            OleDbDataReader reader = commandselect.ExecuteReader();
+            ConnectionMySQL.Connect();
+            while (reader.Read())
+            {
+                ConnectionMySQL.InsertCumSunasaProduct(reader.GetValue(0).ToString(), reader.GetValue(1).ToString(), reader.GetValue(3).ToString(), reader.GetValue(10).ToString(), reader.GetValue(9).ToString(), reader.GetValue(8).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetValue(6).ToString(), reader.GetValue(11).ToString(), reader.GetValue(12).ToString());
+                UpdateAfterInsert("ts_producto", "codigoproducto", 0, reader);
+            }
+            ConnectionMySQL.Disconnect();
+            FinalMessage();
+        }
+
         public static void InsertMysqlSector()
         {
             ConectarTedef();
@@ -165,7 +181,7 @@ namespace WindowsFormsApplication1
         public static void InsertMysqlClasificationServiceType()
         {
             ConectarTedef();
-            string query = "select * from ts_tipoclasificaciongasto where flag = '0'";
+            string query = "select * from ts_tipoclasificaciongasto where flag = '0' order by codigoclasificaciongasto;";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             ConnectionMySQL.Connect();
@@ -197,14 +213,14 @@ namespace WindowsFormsApplication1
         public static void InsertMysqlSubMechanismType()
         {
             ConectarTedef();
-            string query = "select * from ts_submecanismopago where flag = '0'";
+            string query = "select * from ts_submecanismopago where flag = '0' order by codigosubmecanismopago";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             ConnectionMySQL.Connect();
             while (reader.Read())
             {
                 ConnectionMySQL.InsertSubMechanismType(reader.GetString(0), reader.GetString(1),reader.GetString(2));
-                UpdateAfterInsert("ts_submecanismopago", "codigosubmecanismopago", 0, reader);
+                UpdateAfterInsert("ts_submecanismopago", "codigosubmecanismopago", 1, reader);
             }
             ConnectionMySQL.Disconnect();
             FinalMessage();
@@ -289,7 +305,7 @@ namespace WindowsFormsApplication1
         public static void InsertMysqlCoverageType()
         {
             ConectarTedef();
-            string query = "select * from  ts_tipocobertvinctipprest where flag = '0'";
+            string query = "select * from  ts_tipocobertvinctipprest where flag = '0' order by codigotipocoberturaprest";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             ConnectionMySQL.Connect();
@@ -305,14 +321,14 @@ namespace WindowsFormsApplication1
         public static void InsertMysqlSubCoverageType()
         {
             ConectarTedef();
-            string query = "select * from ts_subtipocobertura where flag = '0'";
+            string query = "select * from ts_subtipocobertura where flag = '0' order by codigositeds";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             ConnectionMySQL.Connect();
             while (reader.Read())
             {
                 ConnectionMySQL.InsertSubCoverageType(reader.GetValue(0).ToString(), reader.GetValue(1).ToString(), reader.GetValue(2).ToString(), reader.GetValue(3).ToString());
-                UpdateAfterInsert("ts_subtipocobertura", "codigositeds", 0, reader);
+                UpdateAfterInsert("ts_subtipocobertura", "codigositeds", 3, reader);
             }
             ConnectionMySQL.Disconnect();
             FinalMessage();
@@ -355,7 +371,7 @@ namespace WindowsFormsApplication1
                     ConnectionMySQL.Disconnect();
                 }
                 ConnectionMySQL.Connect();
-                ConnectionMySQL.InsertAuthorization(reader.GetString(1), reader.GetString(25), reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)));
+                ConnectionMySQL.InsertAuthorization(reader.GetString(1), reader.GetString(25), reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)), reader.GetValue(35).ToString());
                 ConnectionMySQL.Disconnect();
                 UpdateAfterInsert("DatosGenerales", "cAutoCode", 2, reader);
             }
@@ -483,7 +499,7 @@ namespace WindowsFormsApplication1
         public static void InsertMysqlAfiliationType()
         {
             ConectarSiteds();
-            string query = "select * from TipoAfiliacion where flag = '0'";
+            string query = "select * from TipoAfiliacion where flag = '0' order by cAfilType";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             ConnectionMySQL.Connect();

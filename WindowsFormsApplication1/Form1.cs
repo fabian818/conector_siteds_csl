@@ -32,5 +32,10 @@ namespace WindowsFormsApplication1
         {
             ConecctionAccess.TimerInsertMysql();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ConecctionAccess.InsertMysql();
+        }
     }
 }

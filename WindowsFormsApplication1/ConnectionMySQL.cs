@@ -27,6 +27,32 @@ namespace WindowsFormsApplication1
             Conex.Close();
         }
 
+        public static void InsertCumSunasaProduct(string code, string name, string form, string owner, string manufacturer, string report_unity, string measure, string measure_unity, string posologic_unity, string atc_code, string atc_name)
+        {
+            try
+            {
+                string query = "INSERT INTO cum_sunasa_products (code,name,form,owner,manufacturer,report_unity,measure,measure_unity,posologic_unity,atc_code,atc_name) VALUES (@code,@name,@form,@owner,@manufacturer,@report_unity,@measure,@measure_unity,@posologic_unity,@atc_code,@atc_name);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@form", form);
+                command.Parameters.AddWithValue("@owner", owner);
+                command.Parameters.AddWithValue("@manufacturer", manufacturer);
+                command.Parameters.AddWithValue("@report_unity", report_unity);
+                command.Parameters.AddWithValue("@measure", measure);
+                command.Parameters.AddWithValue("@measure_unity", measure_unity);
+                command.Parameters.AddWithValue("@posologic_unity", posologic_unity);
+                command.Parameters.AddWithValue("@atc_code", atc_code);
+                command.Parameters.AddWithValue("@atc_name", atc_name);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
         public static void InsertEan(string code, string name, string concentration, string form, string form_simplificated, string presentation, string fractions, string due_date_sanitary, string number_sanitary, string holder_name)
         {
             try
@@ -151,7 +177,7 @@ namespace WindowsFormsApplication1
         {
             try
             {
-                string query = "INSERT INTO mechanism_types (code,name) VALUES (@code,@name);";
+                string query = "INSERT INTO mechanism_payments (code,name) VALUES (@code,@name);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@code", code);
                 command.Parameters.AddWithValue("@name", name);
@@ -164,14 +190,14 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public static void InsertSubMechanismType(string mechanism_type_code, string code, string name)
+        public static void InsertSubMechanismType(string mechanism_payment_code, string code, string name)
         {
             try
             {
-                int mechanism_type_id = GetIdFromCode("mechanism_types", mechanism_type_code);
-                string query = "INSERT INTO sub_mechanism_types (mechanism_type_id,code,name) VALUES (@mechanism_type_id,@code,@name);";
+                int mechanism_payment_id = GetIdFromCode("mechanism_payments", mechanism_payment_code);
+                string query = "INSERT INTO sub_mechanism_pay_types(mechanism_payment_id,code,name) VALUES(@mechanism_payment_id,@code,@name);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
-                command.Parameters.AddWithValue("@mechanism_type_id", mechanism_type_id);
+                command.Parameters.AddWithValue("@mechanism_payment_id", mechanism_payment_id);
                 command.Parameters.AddWithValue("@code", code);
                 command.Parameters.AddWithValue("@name", name);
                 command.CommandTimeout = 0;
@@ -394,14 +420,33 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public static void InsertAuthorization(string insured_code, string money_code, string clinic_ruc, string code, string date, string name, string paternal, string maternal, string birthday)
+        public static void InsertProduct(string code, string name)
         {
             try
             {
+                string query = "INSERT INTO products (code,name) VALUES (@code,@name);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@code", code);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
+        public static void InsertAuthorization(string insured_code, string money_code, string clinic_ruc, string code, string date, string name, string paternal, string maternal, string birthday, string product_code)
+        {
+            try
+            {
+                int product_id = GetIdFromCode("products", product_code);
                 int patient_id = GetPatient(name, paternal,maternal,birthday);
                 int money_id = GetIdFromCode("money", money_code);
-                string query = "INSERT INTO authorizations (patient_id,money_id,clinic_id,code,date) VALUES (@patient_id,@money_id,1,@code,@date);";
+                string query = "INSERT INTO authorizations (product_id,patient_id,money_id,clinic_id,code,date) VALUES (@product_id,@patient_id,@money_id,1,@code,@date);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@product_id", product_id);
                 command.Parameters.AddWithValue("@patient_id", patient_id);
                 command.Parameters.AddWithValue("@money_id", money_id);
                 command.Parameters.AddWithValue("@code", code);
