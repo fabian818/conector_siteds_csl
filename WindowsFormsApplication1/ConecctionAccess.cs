@@ -345,7 +345,6 @@ namespace WindowsFormsApplication1
                 UpdateAfterInsert("Coberturas", "cAutoCode", 0, reader);
             }
             ConnectionMySQL.Disconnect();
-            FinalMessage();
         } 
 
         public static void InsertMysqlAutorization()
@@ -374,7 +373,6 @@ namespace WindowsFormsApplication1
                 UpdateAfterInsert("DatosGenerales", "cAutoCode", 2, reader);
             }
             Desconectar();
-            FinalMessage();
         }
 
         public static bool AfiliationTypeExists(OleDbDataReader reader)
