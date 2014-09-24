@@ -25,7 +25,7 @@ namespace WindowsFormsApplication1
 
         public static void ConectarEpslog()
         {
-            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\prueba\epslog.mdb";
+            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\\ADMISION-PC\SITEDS CLIENTE 9.0 (Rev. 0.0)\epslog.mdb";
             Conex = new OleDbConnection(CadenaConexion);
             Conex.Open();
         }
@@ -46,14 +46,6 @@ namespace WindowsFormsApplication1
 
         public static void InsertMysql()
         {
-            InsertMysqlAutorization();
-            InsertMysqlCoverage();
-            /*
-             * 
-            InsertMysqlCumSunasaProduct();
-            InsertMysqlCoverageType();
-            InsertMysqlSubCoverageType();
-            InsertMysqlDigemid();
             InsertMysqlAfiliationType();
             InsertMysqlRelationShip();
             InsertMysqlInsurance();
@@ -68,13 +60,18 @@ namespace WindowsFormsApplication1
             InsertMysqlMechanismType();
             InsertMysqlSubMechanismType();
             InsertMysqlProduct();
-
-            */
+            InsertMysqlCumSunasaProduct();
+            InsertMysqlCoverageType();
+            InsertMysqlSubCoverageType();
+            InsertMysqlDigemid();
+            InsertMysqlAutorization();
+            InsertMysqlCoverage();
         }
 
         public static void TimerInsertMysql()
         {
-            InsertMysqlRelationShip();
+            InsertMysqlAutorization();
+            InsertMysqlCoverage();
         }
         
         public static void InsertMysqlPrice()
