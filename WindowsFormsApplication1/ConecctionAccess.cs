@@ -87,6 +87,11 @@ namespace WindowsFormsApplication1
             */
         }
 
+        public static void TimerInsertMysql()
+        {
+            InsertMysqlRelationShip();
+        }
+        
         public static void InsertMysqlPrice()
         {
             ConectarTarifario();
@@ -267,7 +272,7 @@ namespace WindowsFormsApplication1
         public static void InsertMysqlDiagnostic()
         {
             ConectarTedef();
-            string query = "select * from TS_CIE10 where flag = '0'";
+            string query = "select * from TS_CIE10 where flag = '0' order by codigocie10";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             ConnectionMySQL.Connect();

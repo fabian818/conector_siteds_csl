@@ -22,7 +22,15 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ConecctionAccess.InsertMysql();
+            timer1.Interval = 100;
+            timer1.Enabled = true;
+        }
+
+
+        
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            ConecctionAccess.TimerInsertMysql();
         }
     }
 }
