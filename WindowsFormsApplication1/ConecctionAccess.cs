@@ -46,9 +46,11 @@ namespace WindowsFormsApplication1
 
         public static void InsertMysql()
         {
-            InsertMysqlCumSunasaProduct();
+            InsertMysqlAutorization();
+            InsertMysqlCoverage();
             /*
              * 
+            InsertMysqlCumSunasaProduct();
             InsertMysqlCoverageType();
             InsertMysqlSubCoverageType();
             InsertMysqlDigemid();
@@ -59,8 +61,7 @@ namespace WindowsFormsApplication1
             InsertMysqlService();
             InsertMysqlPrice();
             InsertMysqlDiagnosticCategory();
-            InsertMysqlDiagnostic();
-            
+            InsertMysqlDiagnostic();            
             InsertMysqlDigemid();
             InsertMysqlSector();
             InsertMysqlClasificationServiceType();
@@ -337,13 +338,13 @@ namespace WindowsFormsApplication1
         public static void InsertMysqlCoverage()
         {
             ConectarEpslog();
-            string query = "select * from Coberturas where flag = '0' and cautocode <> '0000'";
+            string query = "select * from Coberturas where flag = '0' and cautocode <> '0000' order by cautocode";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             ConnectionMySQL.Connect();
             while (reader.Read())
             {
-                ConnectionMySQL.InsertCoverage(reader.GetValue(2).ToString(), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(8).ToString(), reader.GetValue(9).ToString());
+                ConnectionMySQL.InsertCoverage(reader.GetValue(2).ToString(), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(8).ToString(), reader.GetValue(9).ToString(), reader.GetValue(16).ToString());
                 UpdateAfterInsert("Coberturas", "cAutoCode", 0, reader);
             }
             ConnectionMySQL.Disconnect();

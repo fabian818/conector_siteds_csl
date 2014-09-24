@@ -307,19 +307,21 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public static void InsertCoverage(string authorization_code, string code, string name, string cop_fijo, string cop_var)
+        public static void InsertCoverage(string authorization_code, string code, string name, string cop_fijo, string cop_var, string cop_text)
         {
             try
             {
                 int authorization_id = GetIdFromCode("authorizations", authorization_code);
-                int sub_coverage_type_id = GetIdFromCode("sub_coverages_types", code);
-                string query = "INSERT INTO coverages (authorization_id,sub_coverage_type_id,name,cop_fijo,cop_var) VALUES (@authorization_id,@sub_coverage_type_id,@name,@cop_fijo,@cop_var);";
+                int sub_coverage_type_id = GetIdFromCode("sub_coverage_types", code);
+                string query = "INSERT INTO coverages (authorization_id,code,sub_coverage_type_id,name,cop_fijo,cop_var,cop_text) VALUES (@authorization_id,@code,@sub_coverage_type_id,@name,@cop_fijo,@cop_var,@cop_text);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@authorization_id", authorization_id);
                 command.Parameters.AddWithValue("@sub_coverage_type_id", sub_coverage_type_id);
                 command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@code", code);
                 command.Parameters.AddWithValue("@cop_fijo", Convert.ToDecimal(cop_fijo));
                 command.Parameters.AddWithValue("@cop_var", Convert.ToDecimal(cop_var));
+                command.Parameters.AddWithValue("@cop_text", cop_text);
                 command.CommandTimeout = 0;
                 command.ExecuteNonQuery();
             }
