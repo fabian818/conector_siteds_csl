@@ -25,7 +25,7 @@ namespace WindowsFormsApplication1
 
         public static void ConectarEpslog()
         {
-            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\prueba\epslog.mdb";
+            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\\ADMISION-PC\SITEDS CLIENTE 9.0 (Rev. 0.0)\epslog.mdb";
             Conex = new OleDbConnection(CadenaConexion);
             Conex.Open();
         }
@@ -46,6 +46,9 @@ namespace WindowsFormsApplication1
 
         public static void InsertMysql()
         {
+            InsertMysqlDoctor();
+            /*
+            InsertMysqlEan();ctos
             InsertMysqlAfiliationType();
             InsertMysqlRelationShip();
             InsertMysqlInsurance();
@@ -60,12 +63,13 @@ namespace WindowsFormsApplication1
             InsertMysqlMechanismType();
             InsertMysqlSubMechanismType();
             InsertMysqlProduct();
-            InsertMysqlCumSunasaProduct();
+            //InsertMysqlCumSunasaProduct();
             InsertMysqlCoverageType();
             InsertMysqlSubCoverageType();
             InsertMysqlDigemid();
             InsertMysqlAutorization();
             InsertMysqlCoverage();
+             * */
         }
 
         public static void TimerInsertMysql()
@@ -91,6 +95,22 @@ namespace WindowsFormsApplication1
                 }
                 ConnectionMySQL.IncludePrice(reader.GetValue(0).ToString(), reader.GetValue(2).ToString(), Convert.ToInt16(reader.GetValue(3).ToString()));
                 UpdateAfterInsert("tarifario", "codigo", 0, reader);
+            }
+            ConnectionMySQL.Disconnect();
+            FinalMessage();
+        }
+
+        public static void InsertMysqlDoctor()
+        {
+            ConectarTarifario();
+            string query = "select * from medicos where flag = '0' and dni <> '0' order by dni";
+            OleDbCommand commandselect = new OleDbCommand(query, Conex);
+            OleDbDataReader reader = commandselect.ExecuteReader();
+            ConnectionMySQL.Connect();
+            while (reader.Read())
+            {
+                ConnectionMySQL.InsertDoctor(reader.GetValue(0).ToString(), reader.GetString(1), reader.GetString(2), reader.GetString(3));
+                UpdateAfterInsert("medicos", "dni", 0, reader);
             }
             ConnectionMySQL.Disconnect();
             FinalMessage();
@@ -342,8 +362,9 @@ namespace WindowsFormsApplication1
             while (reader.Read())
             {
                 ConnectionMySQL.InsertCoverage(reader.GetValue(2).ToString(), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(8).ToString(), reader.GetValue(9).ToString(), reader.GetValue(16).ToString());
-                UpdateAfterInsert("Coberturas", "cAutoCode", 0, reader);
+                UpdateAfterInsert("Coberturas", "cAutoCode", 2, reader);
             }
+            Desconectar();
             ConnectionMySQL.Disconnect();
         } 
 

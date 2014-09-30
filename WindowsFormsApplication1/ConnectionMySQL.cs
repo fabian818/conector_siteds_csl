@@ -139,6 +139,26 @@ namespace WindowsFormsApplication1
         }
 
 
+
+        public static void InsertDoctor(string code, string complet_name, string tuition_code, string speciality_name)
+        {
+            try
+            {
+                string query = "INSERT INTO doctors (document_identity_code,complet_name, tuition_code, specialty_name,document_identity_type_id) VALUES (@dni,@complet_name,@tuition_code,@speciality_name,1);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@dni", code);
+                command.Parameters.AddWithValue("@complet_name", complet_name);
+                command.Parameters.AddWithValue("@tuition_code", tuition_code);
+                command.Parameters.AddWithValue("@speciality_name", speciality_name);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
         public static void InsertSector(string code, string name)
         {
             try
