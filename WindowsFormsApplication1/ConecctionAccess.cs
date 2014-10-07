@@ -46,8 +46,12 @@ namespace WindowsFormsApplication1
 
         public static void InsertMysql()
         {
-            InsertMysqlDoctor();
             /*
+            InsertMysqlDoctor();
+            InsertMysqlDiagnosticCategory();
+            InsertMysqlDiagnostic();            
+            InsertMysqlDigemid();
+            InsertMysqlSector();            
             InsertMysqlEan();ctos
             InsertMysqlAfiliationType();
             InsertMysqlRelationShip();
@@ -55,10 +59,6 @@ namespace WindowsFormsApplication1
             InsertMysqlMoney();
             InsertMysqlService();
             InsertMysqlPrice();
-            InsertMysqlDiagnosticCategory();
-            InsertMysqlDiagnostic();            
-            InsertMysqlDigemid();
-            InsertMysqlSector();
             InsertMysqlClasificationServiceType();
             InsertMysqlMechanismType();
             InsertMysqlSubMechanismType();

@@ -519,7 +519,7 @@ namespace WindowsFormsApplication1
         {
             try
             {
-                string query = "INSERT INTO patients (document_identity_type_id,document_identity_code,name,paternal,maternal,birthday,age,sex) VALUES(1,@dni,@name,@paternal,@maternal,@birthday,@age,@sex);";
+                string query = "INSERT INTO patients (document_identity_type_id,document_identity_code,name,paternal,maternal,birthday,age,sex,is_insured) VALUES(1,@dni,@name,@paternal,@maternal,@birthday,@age,@sex,@is_insured);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@dni", dni);
                 command.Parameters.AddWithValue("@name", name);
@@ -527,7 +527,8 @@ namespace WindowsFormsApplication1
                 command.Parameters.AddWithValue("@maternal", maternal);
                 command.Parameters.AddWithValue("@birthday", birthday);
                 command.Parameters.AddWithValue("@age", age);
-                command.Parameters.AddWithValue("@sex", sex);
+                command.Parameters.AddWithValue("@sex", sex); ;
+                command.Parameters.AddWithValue("@is_insured", true);
                 command.CommandTimeout = 0;
                 command.ExecuteNonQuery();
                 string query_select = "select id from patients where name= @name and paternal = @paternal and maternal = @maternal and birthday = @birthday;";
