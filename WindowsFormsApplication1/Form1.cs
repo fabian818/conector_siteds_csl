@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
 {
-    public partial class Form1 : Form
+    public partial class Conector_CSL_Siteds : Form
     {
-        public Form1()
+        public Conector_CSL_Siteds()
         {
             InitializeComponent();
         }
@@ -36,6 +36,11 @@ namespace WindowsFormsApplication1
         private void button2_Click(object sender, EventArgs e)
         {
             ConecctionAccess.InsertMysql();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
