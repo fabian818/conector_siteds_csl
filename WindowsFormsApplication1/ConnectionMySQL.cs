@@ -405,14 +405,15 @@ namespace WindowsFormsApplication1
         }
 
          
-        public static void InsertSubCoverageType(string coverage_type_code, string fact_code, string name, string code)
+        public static void InsertSubCoverageType(string coverage_type_code, string fact_code, string name, string code, string other_code)
         {
             try
             {
                 int coverage_type_id = GetIdFromCode("coverage_types", coverage_type_code);
-                string query = "INSERT INTO sub_coverage_types (code,name, fact_code, coverage_type_id) VALUES (@code,@name,@fact_code,@coverage_type_id);";
+                string query = "INSERT INTO sub_coverage_types (code,other_code,name, fact_code, coverage_type_id) VALUES (@code,@other_code,@name,@fact_code,@coverage_type_id);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@other_code", other_code);
                 command.Parameters.AddWithValue("@name", name);
                 command.Parameters.AddWithValue("@fact_code", fact_code);
                 command.Parameters.AddWithValue("@coverage_type_id", coverage_type_id);

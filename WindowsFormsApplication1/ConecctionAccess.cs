@@ -25,7 +25,7 @@ namespace WindowsFormsApplication1
 
         public static void ConectarEpslog()
         {
-            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\\ADMISION-PC\SITEDS CLIENTE 9.0 (Rev. 0.0)\epslog.mdb";
+            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\prueba\epslog.mdb";
             Conex = new OleDbConnection(CadenaConexion);
             Conex.Open();
         }
@@ -46,6 +46,7 @@ namespace WindowsFormsApplication1
 
         public static void InsertMysql()
         {
+            InsertMysqlSubCoverageType();
             /*
             InsertMysqlDoctor();
             InsertMysqlDiagnosticCategory();
@@ -338,15 +339,15 @@ namespace WindowsFormsApplication1
 
         public static void InsertMysqlSubCoverageType()
         {
-            ConectarTedef();
-            string query = "select * from ts_subtipocobertura where flag = '0' order by codigositeds";
+            ConectarTarifario();
+            string query = "select * from sub_coverage_types where flag = '0' order by fact_code";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             ConnectionMySQL.Connect();
             while (reader.Read())
             {
-                ConnectionMySQL.InsertSubCoverageType(reader.GetValue(0).ToString(), reader.GetValue(1).ToString(), reader.GetValue(2).ToString(), reader.GetValue(3).ToString());
-                UpdateAfterInsert("ts_subtipocobertura", "codigositeds", 3, reader);
+                ConnectionMySQL.InsertSubCoverageType(reader.GetValue(0).ToString(), reader.GetValue(1).ToString(), reader.GetValue(2).ToString(), reader.GetValue(3).ToString(), reader.GetValue(4).ToString());
+                UpdateAfterInsert("sub_coverage_types", "fact_code", 1, reader);
             }
             ConnectionMySQL.Disconnect();
             FinalMessage();
@@ -396,6 +397,34 @@ namespace WindowsFormsApplication1
             Desconectar();
         }
 
+        public static void InsertMysqlInsuredAutorization()
+        {
+            ConectarEpslog();
+            string query = "select * from seguros_datosgenerales where flag = '0' and cautocode <> '0000'";
+            OleDbCommand commandselect = new OleDbCommand(query, Conex);
+            OleDbDataReader reader = commandselect.ExecuteReader();
+            while (reader.Read())
+            {
+                if (!CompanyInsuredExists(reader))
+                {
+                    ConnectionMySQL.Connect();
+                    ConnectionMySQL.InsertCompany(reader.GetValue(24).ToString(), reader.GetValue(23).ToString(), reader.GetString(16), reader.GetString(25 ));
+                    ConnectionMySQL.Disconnect();
+                }
+                if (!InsuredExists(reader))
+                {
+                    ConnectionMySQL.Connect();
+                    ConnectionMySQL.InsertInsured(reader.GetString(27), reader.GetString(17), reader.GetString(0), reader.GetString(22), reader.GetString(1), reader.GetString(23), reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetString(11), Helper.GetDate(reader.GetString(12)), reader.GetInt16(13).ToString(), reader.GetString(14).ToString(), Helper.GetDate(reader.GetString(19)), Helper.GetDate(reader.GetString(20)), Helper.GetDate(reader.GetString(21)), reader.GetString(29), "");
+                    ConnectionMySQL.Disconnect();
+                }
+                ConnectionMySQL.Connect();
+                ConnectionMySQL.InsertAuthorization(reader.GetString(1), reader.GetString(25), reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)), reader.GetValue(35).ToString());
+                ConnectionMySQL.Disconnect();
+                UpdateAfterInsert("seguros_datosgenerales", "cAutoCode", 2, reader);
+            }
+            Desconectar();
+        }
+
         public static bool AfiliationTypeExists(OleDbDataReader reader)
         {
             string query = "select * from afiliation_types where code = '" + reader.GetString(27) + "';";
@@ -405,6 +434,12 @@ namespace WindowsFormsApplication1
         public static bool CompanyExists(OleDbDataReader reader)
         {
             string query = "select * from companies where ruc = '"+ reader.GetString(17)+"';";
+            return Evalue(query);
+        }
+
+        public static bool CompanyInsuredExists(OleDbDataReader reader)
+        {
+            string query = "select * from companies where number = '" + reader.GetString(24) + "';";
             return Evalue(query);
         }
 
