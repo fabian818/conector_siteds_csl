@@ -467,9 +467,10 @@ namespace WindowsFormsApplication1
                 int product_id = GetIdFromCode("products", product_code);
                 int patient_id = GetPatient(name, paternal,maternal,birthday);
                 int money_id = GetIdFromCode("money", money_code);
-                string query = "INSERT INTO authorizations (product_id,patient_id,money_id,clinic_id,code,date) VALUES (@product_id,@patient_id,@money_id,1,@code,@date);";
+                string query = "INSERT INTO authorizations (authorization_type_id,product_id,patient_id,money_id,clinic_id,code,date) VALUES (@authorization_type_id,@product_id,@patient_id,@money_id,1,@code,@date);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@product_id", product_id);
+                command.Parameters.AddWithValue("@authorization_type_id", 1);
                 command.Parameters.AddWithValue("@patient_id", patient_id);
                 command.Parameters.AddWithValue("@money_id", money_id);
                 command.Parameters.AddWithValue("@code", code);
