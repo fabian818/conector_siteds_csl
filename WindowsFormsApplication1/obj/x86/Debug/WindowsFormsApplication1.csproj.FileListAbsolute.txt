@@ -5,5 +5,4 @@ c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApp
 c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
 c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.exe
 c:\users\fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.pdb
-C:\Users\Fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
 C:\Users\Fabian\documents\visual studio 2010\Projects\Conector_1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Conector_CSL_Siteds.resources
