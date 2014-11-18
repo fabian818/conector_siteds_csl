@@ -46,7 +46,6 @@ namespace WindowsFormsApplication1
 
         public static void InsertMysql()
         {
-            InsertMysqlSubCoverageType();
             InsertMysqlInsuredAutorization();
             InsertMysqlInsuredCoverage();
             InsertMysqlAutorization();
@@ -79,6 +78,8 @@ namespace WindowsFormsApplication1
 
         public static void TimerInsertMysql()
         {
+            InsertMysqlInsuredAutorization();
+            InsertMysqlInsuredCoverage();
             InsertMysqlAutorization();
             InsertMysqlCoverage();
         }
