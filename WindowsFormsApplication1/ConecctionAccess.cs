@@ -47,6 +47,10 @@ namespace WindowsFormsApplication1
         public static void InsertMysql()
         {
             InsertMysqlSubCoverageType();
+            InsertMysqlInsuredAutorization();
+            InsertMysqlInsuredCoverage();
+            InsertMysqlAutorization();
+            InsertMysqlCoverage();
             /*
             InsertMysqlDoctor();
             InsertMysqlDiagnosticCategory();
@@ -340,14 +344,14 @@ namespace WindowsFormsApplication1
         public static void InsertMysqlSubCoverageType()
         {
             ConectarTarifario();
-            string query = "select * from sub_coverage_types where flag = '0' order by fact_code";
+            string query = "select * from sub_coverage_types where flag = '0' order by id";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             ConnectionMySQL.Connect();
             while (reader.Read())
             {
-                ConnectionMySQL.InsertSubCoverageType(reader.GetValue(0).ToString(), reader.GetValue(1).ToString(), reader.GetValue(2).ToString(), reader.GetValue(3).ToString(), reader.GetValue(4).ToString());
-                UpdateAfterInsert("sub_coverage_types", "fact_code", 1, reader);
+                ConnectionMySQL.InsertSubCoverageType(reader.GetValue(1).ToString(), reader.GetValue(2).ToString(), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString());
+                UpdateAfterInsert("sub_coverage_types", "id", 0, reader);
             }
             ConnectionMySQL.Disconnect();
             FinalMessage();
@@ -364,6 +368,21 @@ namespace WindowsFormsApplication1
             {
                 ConnectionMySQL.InsertCoverage(reader.GetValue(2).ToString(), reader.GetValue(3).ToString(), reader.GetValue(4).ToString(), reader.GetValue(8).ToString(), reader.GetValue(9).ToString(), reader.GetValue(16).ToString());
                 UpdateAfterInsert("Coberturas", "cAutoCode", 2, reader);
+            }
+            Desconectar();
+            ConnectionMySQL.Disconnect();
+        }
+        public static void InsertMysqlInsuredCoverage()
+        {
+            ConectarEpslog();
+            string query = "select * from seguros_coberturas where flag = '0' and cautocode <> '0000' order by cautocode";
+            OleDbCommand commandselect = new OleDbCommand(query, Conex);
+            OleDbDataReader reader = commandselect.ExecuteReader();
+            ConnectionMySQL.Connect();
+            while (reader.Read())
+            {
+                ConnectionMySQL.InsertCoverageInsured(reader.GetValue(2).ToString(), reader.GetValue(4).ToString(), reader.GetValue(5).ToString(), reader.GetValue(9).ToString(), reader.GetValue(10).ToString(), "");
+                UpdateAfterInsert("seguros_coberturas", "cautocode", 2, reader);
             }
             Desconectar();
             ConnectionMySQL.Disconnect();
@@ -385,12 +404,14 @@ namespace WindowsFormsApplication1
                 }
                 if (!InsuredExists(reader))
                 {
+                    string clinic_history_code = GetClinicHistoryCode();
                     ConnectionMySQL.Connect();
-                    ConnectionMySQL.InsertInsured(reader.GetString(27), reader.GetString(17), reader.GetString(0), reader.GetString(22), reader.GetString(1), reader.GetString(23), reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetString(11), Helper.GetDate(reader.GetString(12)), reader.GetInt16(13).ToString(), reader.GetString(14).ToString(), Helper.GetDate(reader.GetString(19)), Helper.GetDate(reader.GetString(20)), Helper.GetDate(reader.GetString(21)), reader.GetString(29), "");
+                    ConnectionMySQL.InsertInsured(reader.GetString(27), reader.GetString(17), reader.GetString(0), reader.GetString(22), reader.GetString(1), reader.GetString(23), reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetString(11), Helper.GetDate(reader.GetString(12)), reader.GetInt16(13).ToString(), reader.GetString(14).ToString(), Helper.GetDate(reader.GetString(19)), Helper.GetDate(reader.GetString(20)), Helper.GetDate(reader.GetString(21)), reader.GetString(29), "", clinic_history_code);
                     ConnectionMySQL.Disconnect();
                 }
+                string intern_code = GetInternCode();
                 ConnectionMySQL.Connect();
-                ConnectionMySQL.InsertAuthorization(reader.GetString(1), reader.GetString(25), reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)), reader.GetValue(35).ToString());
+                ConnectionMySQL.InsertAuthorization(reader.GetString(1), reader.GetString(25), reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)), reader.GetValue(35).ToString(), intern_code);
                 ConnectionMySQL.Disconnect();
                 UpdateAfterInsert("DatosGenerales", "cAutoCode", 2, reader);
             }
@@ -408,17 +429,20 @@ namespace WindowsFormsApplication1
                 if (!CompanyInsuredExists(reader))
                 {
                     ConnectionMySQL.Connect();
-                    ConnectionMySQL.InsertCompany(reader.GetValue(24).ToString(), reader.GetValue(23).ToString(), reader.GetString(16), reader.GetString(25 ));
+                    //CAMBIAR EL COMPANY_RUC POR COMPANY_CODE
+                    ConnectionMySQL.InsertCompanyInsured(reader.GetValue(24).ToString(), reader.GetValue(23).ToString(), reader.GetString(16), reader.GetString(25));
                     ConnectionMySQL.Disconnect();
                 }
                 if (!InsuredExists(reader))
                 {
+                    string clinic_history_code = GetClinicHistoryCode();
                     ConnectionMySQL.Connect();
-                    ConnectionMySQL.InsertInsured(reader.GetString(27), reader.GetString(17), reader.GetString(0), reader.GetString(22), reader.GetString(1), reader.GetString(23), reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetString(11), Helper.GetDate(reader.GetString(12)), reader.GetInt16(13).ToString(), reader.GetString(14).ToString(), Helper.GetDate(reader.GetString(19)), Helper.GetDate(reader.GetString(20)), Helper.GetDate(reader.GetString(21)), reader.GetString(29), "");
+                    ConnectionMySQL.InsertInsuredInsured("5", reader.GetString(24), reader.GetString(0), reader.GetString(32), reader.GetString(1), reader.GetString(35), reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetString(11), Helper.GetDate(reader.GetString(12)), reader.GetInt16(13).ToString(), reader.GetString(14).ToString(), Helper.GetDate("19900101"), Helper.GetDate("19900101"), Helper.GetDate("19900101"), reader.GetString(41), "", clinic_history_code);
                     ConnectionMySQL.Disconnect();
                 }
+                string intern_code = GetInternCode();
                 ConnectionMySQL.Connect();
-                ConnectionMySQL.InsertAuthorization(reader.GetString(1), reader.GetString(25), reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)), reader.GetValue(35).ToString());
+                ConnectionMySQL.InsertAuthorization(reader.GetString(1), reader.GetString(25), reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)), "99999",intern_code);
                 ConnectionMySQL.Disconnect();
                 UpdateAfterInsert("seguros_datosgenerales", "cAutoCode", 2, reader);
             }
@@ -453,6 +477,52 @@ namespace WindowsFormsApplication1
         {
             string query = "select * from services where code = '" + Helper.SuavizatingCode(reader.GetValue(0).ToString()) + "';";
             return Evalue(query);
+        }
+
+        public static string GetClinicHistoryCode()
+        {
+            ConnectionMySQL.Connect();
+            string query = "select max(abs(clinic_history_code)) from patients";
+            MySqlCommand command = new MySqlCommand(query, ConnectionMySQL.GetConnection());
+            MySqlDataReader readerm = command.ExecuteReader();
+            string clinic_history_code = "0";
+            while (readerm.Read())
+            {
+                string valor = readerm.GetValue(0).ToString();
+                if (valor == "0" || valor == null || valor == "" || Convert.ToInt16(valor) <= 5000)
+                {
+                    clinic_history_code = "5001";
+                }
+                else
+                {
+                    clinic_history_code = (Convert.ToInt16(valor) + 1).ToString();
+                }
+            }
+            ConnectionMySQL.Disconnect();
+            return clinic_history_code;
+        }
+
+        public static string GetInternCode()
+        {
+            ConnectionMySQL.Connect();
+            string query = "select max(abs(intern_code)) from authorizations";
+            MySqlCommand command = new MySqlCommand(query, ConnectionMySQL.GetConnection());
+            MySqlDataReader readerm = command.ExecuteReader();
+            string intern_code = "0";
+            while (readerm.Read())
+            {
+                string valor = readerm.GetValue(0).ToString();
+                if (valor == "0" || valor == null || valor == "" || Convert.ToInt16(valor) <= 15000)
+                {
+                    intern_code = "15001";
+                }
+                else
+                {
+                    intern_code = (Convert.ToInt16(valor) + 1).ToString();
+                }
+            }
+            ConnectionMySQL.Disconnect();
+            return intern_code;
         }
 
         public static bool Evalue(string query)

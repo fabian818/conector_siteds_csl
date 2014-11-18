@@ -327,12 +327,38 @@ namespace WindowsFormsApplication1
             }
         }
 
+        
+
         public static void InsertCoverage(string authorization_code, string code, string name, string cop_fijo, string cop_var, string cop_text)
         {
             try
             {
                 int authorization_id = GetIdFromCode("authorizations", authorization_code);
                 int sub_coverage_type_id = GetIdFromCode("sub_coverage_types", code);
+                string query = "INSERT INTO coverages (authorization_id,code,sub_coverage_type_id,name,cop_fijo,cop_var,cop_text) VALUES (@authorization_id,@code,@sub_coverage_type_id,@name,@cop_fijo,@cop_var,@cop_text);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@authorization_id", authorization_id);
+                command.Parameters.AddWithValue("@sub_coverage_type_id", sub_coverage_type_id);
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@cop_fijo", Convert.ToDecimal(cop_fijo));
+                command.Parameters.AddWithValue("@cop_var", Convert.ToDecimal(cop_var));
+                command.Parameters.AddWithValue("@cop_text", cop_text);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
+        public static void InsertCoverageInsured(string authorization_code, string code, string name, string cop_fijo, string cop_var, string cop_text)
+        {
+            try
+            {
+                int authorization_id = GetIdFromCode("authorizations", authorization_code);
+                int sub_coverage_type_id = GetIdFromCode("sub_coverage_types", code, "other_code");
                 string query = "INSERT INTO coverages (authorization_id,code,sub_coverage_type_id,name,cop_fijo,cop_var,cop_text) VALUES (@authorization_id,@code,@sub_coverage_type_id,@name,@cop_fijo,@cop_var,@cop_text);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@authorization_id", authorization_id);
@@ -460,14 +486,14 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public static void InsertAuthorization(string insured_code, string money_code, string clinic_ruc, string code, string date, string name, string paternal, string maternal, string birthday, string product_code)
+        public static void InsertAuthorization(string insured_code, string money_code, string clinic_ruc, string code, string date, string name, string paternal, string maternal, string birthday, string product_code, string intern_code)
         {
             try
             {
                 int product_id = GetIdFromCode("products", product_code);
                 int patient_id = GetPatient(name, paternal,maternal,birthday);
                 int money_id = GetIdFromCode("money", money_code);
-                string query = "INSERT INTO authorizations (authorization_type_id,product_id,patient_id,money_id,clinic_id,code,date) VALUES (@authorization_type_id,@product_id,@patient_id,@money_id,1,@code,@date);";
+                string query = "INSERT INTO authorizations (authorization_type_id,product_id,patient_id,money_id,clinic_id,code,date,intern_code) VALUES (@authorization_type_id,@product_id,@patient_id,@money_id,1,@code,@date,@intern_code);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@product_id", product_id);
                 command.Parameters.AddWithValue("@authorization_type_id", 1);
@@ -475,6 +501,7 @@ namespace WindowsFormsApplication1
                 command.Parameters.AddWithValue("@money_id", money_id);
                 command.Parameters.AddWithValue("@code", code);
                 command.Parameters.AddWithValue("@date", date);
+                command.Parameters.AddWithValue("@intern_code", intern_code);
                 command.CommandTimeout = 0;
                 command.ExecuteNonQuery();
             }
@@ -484,7 +511,7 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public static void InsertInsured(string afiliation_code, string company_ruc, string insurance_code, string relationship_code, string code, string dni, string paternal, string maternal, string name, string hold_paternal, string hold_maternal, string hold_name, string birthday, string age, string sex, string validity_i, string validity_f, string inclusion_date, string card_number, string observation)
+        public static void InsertInsured(string afiliation_code, string company_ruc, string insurance_code, string relationship_code, string code, string dni, string paternal, string maternal, string name, string hold_paternal, string hold_maternal, string hold_name, string birthday, string age, string sex, string validity_i, string validity_f, string inclusion_date, string card_number, string observation, string clinic_history_code)
         {
             try
             {   
@@ -492,7 +519,7 @@ namespace WindowsFormsApplication1
                 int afiliation_type_id = GetIdFromCode("afiliation_types", afiliation_code);
                 int company_id = GetIdFromCode("companies", company_ruc, "ruc");
                 int insurance_id = GetIdFromCode("insurances", insurance_code);
-                int patient_id = InsertPatient(dni,name,paternal,maternal,birthday,age,sex);
+                int patient_id = InsertPatient(dni,name,paternal,maternal,birthday,age,sex,clinic_history_code);
                 string query = "INSERT INTO insureds (afiliation_type_id,company_id,insurance_id,patient_id,code,hold_paternal,hold_maternal,hold_name,validity_i,validity_f,inclusion_date,relation_ship_id,card_number) VALUES (@afiliation_type_id,@company_id,@insurance_id,@patient_id,@code,@hold_paternal,@hold_maternal,@hold_name,@validity_i,@validity_f,@inclusion_date,@relation_ship_id,@card_number);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@afiliation_type_id", afiliation_type_id);
@@ -517,11 +544,44 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public static int InsertPatient(string dni, string name, string paternal, string maternal, string birthday, string age, string sex)
+        public static void InsertInsuredInsured(string afiliation_code, string company_code, string insurance_code, string relationship_code, string code, string dni, string paternal, string maternal, string name, string hold_paternal, string hold_maternal, string hold_name, string birthday, string age, string sex, string validity_i, string validity_f, string inclusion_date, string card_number, string observation,string clinic_history_code)
         {
             try
             {
-                string query = "INSERT INTO patients (document_identity_type_id,document_identity_code,name,paternal,maternal,birthday,age,sex,is_insured) VALUES(1,@dni,@name,@paternal,@maternal,@birthday,@age,@sex,@is_insured);";
+                int relation_ship_id = GetIdFromCode("relation_ships", relationship_code);
+                int afiliation_type_id = GetIdFromCode("afiliation_types", afiliation_code);
+                int company_id = GetIdFromCode("companies", company_code, "number");
+                int insurance_id = GetIdFromCode("insurances", insurance_code);
+                int patient_id = InsertPatient(dni, name, paternal, maternal, birthday, age, sex, clinic_history_code);
+                string query = "INSERT INTO insureds (afiliation_type_id,company_id,insurance_id,patient_id,code,hold_paternal,hold_maternal,hold_name,validity_i,validity_f,inclusion_date,relation_ship_id,card_number) VALUES (@afiliation_type_id,@company_id,@insurance_id,@patient_id,@code,@hold_paternal,@hold_maternal,@hold_name,@validity_i,@validity_f,@inclusion_date,@relation_ship_id,@card_number);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@afiliation_type_id", afiliation_type_id);
+                command.Parameters.AddWithValue("@company_id", company_id);
+                command.Parameters.AddWithValue("@insurance_id", insurance_id);
+                command.Parameters.AddWithValue("@relation_ship_id", relation_ship_id);
+                command.Parameters.AddWithValue("@patient_id", patient_id);
+                command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@hold_paternal", hold_paternal);
+                command.Parameters.AddWithValue("@hold_maternal", hold_maternal);
+                command.Parameters.AddWithValue("@hold_name", hold_name);
+                command.Parameters.AddWithValue("@validity_i", validity_i);
+                command.Parameters.AddWithValue("@validity_f", validity_f);
+                command.Parameters.AddWithValue("@inclusion_date", inclusion_date);
+                command.Parameters.AddWithValue("@card_number", card_number);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
+        public static int InsertPatient(string dni, string name, string paternal, string maternal, string birthday, string age, string sex, string clinic_history_code)
+        {
+            try
+            {
+                string query = "INSERT INTO patients (document_identity_type_id,document_identity_code,name,paternal,maternal,birthday,age,sex,is_insured,clinic_history_code) VALUES(1,@dni,@name,@paternal,@maternal,@birthday,@age,@sex,@is_insured,@clinic_history_code);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@dni", dni);
                 command.Parameters.AddWithValue("@name", name);
@@ -529,7 +589,8 @@ namespace WindowsFormsApplication1
                 command.Parameters.AddWithValue("@maternal", maternal);
                 command.Parameters.AddWithValue("@birthday", birthday);
                 command.Parameters.AddWithValue("@age", age);
-                command.Parameters.AddWithValue("@sex", sex); ;
+                command.Parameters.AddWithValue("@sex", sex);                
+                command.Parameters.AddWithValue("@clinic_history_code", clinic_history_code);
                 command.Parameters.AddWithValue("@is_insured", true);
                 command.CommandTimeout = 0;
                 command.ExecuteNonQuery();
@@ -598,6 +659,25 @@ namespace WindowsFormsApplication1
             }
         }
 
+        public static void InsertCompanyInsured(string number, string ruc, string plan, string name)
+        {
+            try
+            {
+                string query = "INSERT INTO companies (number,ruc,plan,name) VALUES (@number,@ruc,@plan,@name);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@number", number);
+                command.Parameters.AddWithValue("@ruc", ruc);
+                command.Parameters.AddWithValue("@plan", plan);
+                command.Parameters.AddWithValue("@name", name);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+            
          
         public static void InsertProcedureType(string code, string description, string enticode)
         {
@@ -619,7 +699,7 @@ namespace WindowsFormsApplication1
         }
 
         public static int GetIdFromCode(string table, string code)
-        {
+        {   
             string query2 = "select * from "+ table +" where code = '" + code + "';";
             MySqlCommand command = new MySqlCommand(query2, Conex);
             MySqlDataReader reader = command.ExecuteReader();
