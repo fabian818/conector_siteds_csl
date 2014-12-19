@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
         }
         public static void Connect()
         {
-            Conex = new MySqlConnection("server=192.168.1.254; database=csl_development; Uid=csl; pwd=81848133; port=3306;default command timeout=3600");
+            Conex = new MySqlConnection("server=192.168.1.254; database=csl_development; Uid=csl; pwd=clinicaluren81848133_sistemas; port=3306;default command timeout=3600");
 
             Conex.Open();
         }
