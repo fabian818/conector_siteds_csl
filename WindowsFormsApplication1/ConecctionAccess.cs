@@ -46,11 +46,15 @@ namespace WindowsFormsApplication1
 
         public static void InsertMysql()
         {
-            InsertMysqlInsuredAutorization();
+            InsertMysqlProductPacific();
+            /*
+             * 
+             * InsertMysqlInsuredAutorization();
             InsertMysqlInsuredCoverage();
             InsertMysqlAutorization();
             InsertMysqlCoverage();
-            /*
+             * 
+             * 
             InsertMysqlDoctor();
             InsertMysqlDiagnosticCategory();
             InsertMysqlDiagnostic();            
@@ -137,6 +141,22 @@ namespace WindowsFormsApplication1
             ConnectionMySQL.Disconnect();
             FinalMessage();
         }
+
+        public static void InsertMysqlProductPacific()
+        {
+            ConectarEpslog();
+            string query = "select * from seguros_datosgenerales order by cAutoCode";
+            OleDbCommand commandselect = new OleDbCommand(query, Conex);
+            OleDbDataReader reader = commandselect.ExecuteReader();
+            ConnectionMySQL.Connect();
+            while (reader.Read())
+            {
+                ConnectionMySQL.InsertProductPacific(reader.GetValue(20).ToString(), reader.GetValue(2).ToString());
+            }
+            ConnectionMySQL.Disconnect();
+            FinalMessage();
+        }
+
 
         public static void InsertMysqlEan()
         {

@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
         }
         public static void Connect()
         {
-            Conex = new MySqlConnection("server=127.0.0.1; database=csl_development; Uid=root; pwd=root; port=3306;default command timeout=3600");
+            Conex = new MySqlConnection("server=192.168.1.254; database=csl_development; Uid=csl; pwd=81848133; port=3306;default command timeout=3600");
 
             Conex.Open();
         }
@@ -92,6 +92,24 @@ namespace WindowsFormsApplication1
                 command.Parameters.AddWithValue("@due_date_sanitary", Helper.GetCorrectDate(due_date_sanitary));
                 command.Parameters.AddWithValue("@sanitary_number", sanitary_number);
                 command.Parameters.AddWithValue("@holder_name", holder_name);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
+        public static void InsertProductPacific(string code, string authorization_code)
+        {
+            try
+            {
+                int authorization_id = GetIdFromCode("authorizations", authorization_code);
+                string query = "UPDATE authorizations set product_code = @code  where id = @authorization_id;";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@code", code);
+                command.Parameters.AddWithValue("@authorization_id", authorization_id);
                 command.CommandTimeout = 0;
                 command.ExecuteNonQuery();
             }
