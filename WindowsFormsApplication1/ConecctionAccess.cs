@@ -25,7 +25,7 @@ namespace WindowsFormsApplication1
 
         public static void ConectarEpslog()
         {
-            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=N:\epslog.mdb";
+            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\SITEDS CLIENTE 9.0 (Rev. 0.0)\epslog.mdb";
             Conex = new OleDbConnection(CadenaConexion);
             Conex.Open();
         }
