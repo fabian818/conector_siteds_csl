@@ -25,7 +25,7 @@ namespace WindowsFormsApplication1
 
         public static void ConectarEpslog()
         {
-            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\SITEDS CLIENTE 9.0 (Rev. 0.0)\epslog.mdb";
+            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=N:\epslog.mdb";
             Conex = new OleDbConnection(CadenaConexion);
             Conex.Open();
         }
@@ -510,13 +510,13 @@ namespace WindowsFormsApplication1
             while (readerm.Read())
             {
                 string valor = readerm.GetValue(0).ToString();
-                if (valor == "0" || valor == null || valor == "" || Convert.ToInt16(valor) <= 5000)
+                if (valor == "0" || valor == null || valor == "" || Convert.ToInt32(valor) <= 5000)
                 {
                     clinic_history_code = "5001";
                 }
                 else
                 {
-                    clinic_history_code = (Convert.ToInt16(valor) + 1).ToString();
+                    clinic_history_code = (Convert.ToInt32(valor) + 1).ToString();
                 }
             }
             ConnectionMySQL.Disconnect();
