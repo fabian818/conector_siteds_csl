@@ -77,5 +77,70 @@ namespace WindowsFormsApplication1
         {
             return code.Replace(".", "");
         }
+
+        public static string[] GetComplexName(string completeName)
+        {
+            string[] a = new string[3];
+            string c = completeName.Trim();
+            string[] reserverWords = new string[5] { "DEL ", "DE ", " LA ", "LAS ", " Y " };
+            foreach (string item in reserverWords)
+            {
+                if (c.Contains(item))
+                {
+                    a[1] = "YES";
+                    break;
+                }
+                else
+                {
+                    a[1] = "NO";
+                }
+            }
+            a[0] = c;
+            return a;
+        }
+        /*
+        public int[] Evalue(int status, char value)
+        {
+            string[] reserverWords = new string[5] { "DEL", "DE", "LA" , "LAS", "Y"};
+            return 
+        }
+         * */
+
+        public static string[] GetName(string completeName)
+        {
+            string[] a = new string[3];
+            string c = completeName.Trim();
+            int i = 0;
+            for (i = 0; i < c.Length; i++)
+            {
+                if (c[i] == ' ')
+                    {
+                        a[0] = c.Substring(0, i + 1);
+                        break;
+                    }
+                
+            }
+            int init = i;
+            for (i = i  +1; i < c.Length; i++)
+            {
+                if (c[i] == ' ')
+                {
+                    a[1] = c.Substring(init, i - init + 1);
+                    break;
+                }
+            }
+
+            init = i;
+            for (i = i + 1; i < c.Length; i++)
+            {
+                if (i == c.Length - 1)
+                {
+                    a[2] = c.Substring(init, i - init + 1);
+                    break;
+                }
+                
+            }
+            return a;
+        }
     }
 }

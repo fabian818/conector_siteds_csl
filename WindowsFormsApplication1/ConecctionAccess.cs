@@ -23,6 +23,13 @@ namespace WindowsFormsApplication1
             Conex.Open();                      
         }
 
+        public static void ConectarHC()
+        {
+            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\prueba\hc.mdb";
+            Conex = new OleDbConnection(CadenaConexion);
+            Conex.Open();
+        }
+
         public static void ConectarEpslog()
         {
             CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=N:\epslog.mdb";
@@ -139,6 +146,35 @@ namespace WindowsFormsApplication1
                 UpdateAfterInsert("productos", "cod_prod", 0, reader);
             }
             ConnectionMySQL.Disconnect();
+            FinalMessage();
+        }
+
+        public static void InsertMysqlHC()
+        {
+            ConectarHC();
+            string query = "SELECT * FROM hc WHERE nombres  like '* LA *' or nombres like '* DE *'or nombres like '* DEL *' or nombres like '* LAS *' or flag = '0' ORDER BY historia asc";
+            OleDbCommand commandselect = new OleDbCommand(query, Conex);
+            OleDbDataReader reader = commandselect.ExecuteReader();
+            while (reader.Read())
+            {
+                /*
+                if (PatientExists(reader))
+                {
+                    ConnectionMySQL.Connect();
+                    ConnectionMySQL.UpdateHC(Helper.GetName(reader.GetValue(1).ToString())[0], Helper.GetName(reader.GetValue(1).ToString())[1], Helper.GetName(reader.GetValue(1).ToString())[2], reader.GetValue(0).ToString(), reader.GetValue(3).ToString());
+                    ConnectionMySQL.Disconnect();
+                }
+                else
+                {
+                    ConnectionMySQL.Connect();
+                    ConnectionMySQL.InsertHC(Helper.GetName(reader.GetValue(1).ToString())[0], Helper.GetName(reader.GetValue(1).ToString())[1], Helper.GetName(reader.GetValue(1).ToString())[2], reader.GetValue(0).ToString(), reader.GetValue(3).ToString());
+                    ConnectionMySQL.Disconnect();
+                }
+                 * */
+                //ConnectionMySQL.InsertProduct(reader.GetValue(0).ToString(), reader.GetString(1));
+                //UpdateAfterInsert("hc", "historia", 0, reader);
+                MessageBox.Show(Helper.GetComplexName(reader.GetValue(1).ToString())[0] + " -- " + Helper.GetComplexName(reader.GetValue(1).ToString())[1]);
+            }
             FinalMessage();
         }
 
@@ -317,6 +353,12 @@ namespace WindowsFormsApplication1
             FinalMessage();
         }
 
+        public static bool PatientExists(OleDbDataReader reader)
+        {
+            string query = "select * from patients where paternal = '" + Helper.GetName(reader.GetValue(1).ToString())[0] + "' and maternal = '" + Helper.GetName(reader.GetValue(1).ToString())[1] + "' and name = '" + Helper.GetName(reader.GetValue(1).ToString())[2] + "';";
+            return Evalue(query);
+        }
+
         public static bool CategoryServiceExists(OleDbDataReader reader)
         {
             string query = "select * from category_services where code = '" + Helper.GetCategory(Helper.SplitPoints(reader.GetString(1))) + "';";
@@ -432,7 +474,7 @@ namespace WindowsFormsApplication1
                 }
                 string intern_code = GetInternCode();
                 ConnectionMySQL.Connect();
-                ConnectionMySQL.InsertAuthorization(reader.GetString(1), reader.GetString(25), reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)), reader.GetValue(35).ToString(), intern_code);
+                ConnectionMySQL.InsertAuthorization(reader.GetString(1), reader.GetString(25), reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)), reader.GetValue(35).ToString(), intern_code, null);
                 ConnectionMySQL.Disconnect();
                 UpdateAfterInsert("DatosGenerales", "cAutoCode", 2, reader);
             }
@@ -463,7 +505,7 @@ namespace WindowsFormsApplication1
                 }
                 string intern_code = GetInternCode();
                 ConnectionMySQL.Connect();
-                ConnectionMySQL.InsertAuthorization(reader.GetString(1), reader.GetString(25), reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)), "99999",intern_code);
+                ConnectionMySQL.InsertAuthorization(reader.GetString(1), "2", reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)), "99999", intern_code, reader.GetValue(20).ToString());
                 ConnectionMySQL.Disconnect();
                 UpdateAfterInsert("seguros_datosgenerales", "cAutoCode", 2, reader);
             }

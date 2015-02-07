@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
         }
         public static void Connect()
         {
-            Conex = new MySqlConnection("server=192.168.1.254; database=csl_development; Uid=csl; pwd=clinicaluren81848133_sistemas; port=3306;default command timeout=3600");
+            Conex = new MySqlConnection("server=192.168.1.254; database=csl_development; Uid=csl; pwd=81848133; port=3306;default command timeout=3600");
 
             Conex.Open();
         }
@@ -156,7 +156,46 @@ namespace WindowsFormsApplication1
             }
         }
 
+        public static void InsertHC(string paternal, string maternal, string name, string clinic_history_code, string document_identity_code)
+        {
+            try
+            {
+                string query = "INSERT INTO patients (paternal, maternal,name,clinic_history_code,document_identity_code) VALUES (@paternal,@maternal,@name,@clinic_history_code,@document_identity_code);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@paternal", paternal);
+                command.Parameters.AddWithValue("@maternal", maternal);
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@clinic_history_code", clinic_history_code);
+                command.Parameters.AddWithValue("@document_identity_code", document_identity_code);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
 
+        public static void UpdateHC(string paternal, string maternal, string name, string clinic_history_code, string document_identity_code)
+        {
+            try
+            {
+                int patient_id = GetPatient(name, paternal, maternal);
+                string query = "UPDATE patients set clinic_history_code = @clinic_history_code, document_identity_code = @document_identity_code where paternal = @paternal and maternal = @maternal and name = @name;";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@clinic_history_code", clinic_history_code);
+                command.Parameters.AddWithValue("@document_identity_code", document_identity_code);
+                command.Parameters.AddWithValue("@paternal", paternal);
+                command.Parameters.AddWithValue("@maternal", maternal);
+                command.Parameters.AddWithValue("@name", name);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
 
         public static void InsertDoctor(string code, string complet_name, string tuition_code, string speciality_name)
         {
@@ -504,14 +543,14 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public static void InsertAuthorization(string insured_code, string money_code, string clinic_ruc, string code, string date, string name, string paternal, string maternal, string birthday, string product_code, string intern_code)
+        public static void InsertAuthorization(string insured_code, string money_code, string clinic_ruc, string code, string date, string name, string paternal, string maternal, string birthday, string product_code, string intern_code, string pacific_product)
         {
             try
             {
                 int product_id = GetIdFromCode("products", product_code);
                 int patient_id = GetPatient(name, paternal,maternal,birthday);
-                int money_id = GetIdFromCode("money", money_code);
-                string query = "INSERT INTO authorizations (authorization_type_id,product_id,patient_id,money_id,clinic_id,code,date,intern_code) VALUES (@authorization_type_id,@product_id,@patient_id,@money_id,1,@code,@date,@intern_code);";
+                int money_id = 2;
+                string query = "INSERT INTO authorizations (authorization_type_id,product_id,patient_id,money_id,clinic_id,code,date,intern_code, product_code) VALUES (@authorization_type_id,@product_id,@patient_id,@money_id,1,@code,@date,@intern_code,@pacific_product);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@product_id", product_id);
                 command.Parameters.AddWithValue("@authorization_type_id", 1);
@@ -520,6 +559,7 @@ namespace WindowsFormsApplication1
                 command.Parameters.AddWithValue("@code", code);
                 command.Parameters.AddWithValue("@date", date);
                 command.Parameters.AddWithValue("@intern_code", intern_code);
+                command.Parameters.AddWithValue("@pacific_product", pacific_product);
                 command.CommandTimeout = 0;
                 command.ExecuteNonQuery();
             }
@@ -648,6 +688,30 @@ namespace WindowsFormsApplication1
                 while (reader.Read())
                 {
                     id = Convert.ToInt16(reader.GetValue(0));
+                }
+                reader.Close();
+                return id;
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
+        public static int GetPatient(string name, string paternal, string maternal)
+        {
+            try
+            {
+                string query_select = "select id from patients where name= @name and paternal = @paternal and maternal = @maternal;";
+                MySqlCommand commandselect = new MySqlCommand(query_select, Conex);
+                commandselect.Parameters.AddWithValue("@name", name);
+                commandselect.Parameters.AddWithValue("@paternal", paternal);
+                commandselect.Parameters.AddWithValue("@maternal", maternal);
+                MySqlDataReader reader = commandselect.ExecuteReader();
+                int id = 0;
+                while (reader.Read())
+                {
+                    id = Convert.ToInt32(reader.GetValue(0));
                 }
                 reader.Close();
                 return id;
