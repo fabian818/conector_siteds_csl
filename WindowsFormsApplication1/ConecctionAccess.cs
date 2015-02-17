@@ -25,7 +25,7 @@ namespace WindowsFormsApplication1
 
         public static void ConectarHC()
         {
-            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\prueba\hc.mdb";
+            CadenaConexion = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\prueba\historia.mdb";
             Conex = new OleDbConnection(CadenaConexion);
             Conex.Open();
         }
@@ -57,6 +57,7 @@ namespace WindowsFormsApplication1
             /*
              * 
              * InsertMysqlInsuredAutorization();
+            InsertMysqlPatientOther();
             InsertMysqlInsuredCoverage();
             InsertMysqlAutorization();
             InsertMysqlCoverage();
@@ -149,31 +150,19 @@ namespace WindowsFormsApplication1
             FinalMessage();
         }
 
-        public static void InsertMysqlHC()
+        public static void InsertMysqlPatientOther()
         {
             ConectarHC();
-            string query = "SELECT * FROM hc WHERE nombres  like '* LA *' or nombres like '* DE *'or nombres like '* DEL *' or nombres like '* LAS *' or flag = '0' ORDER BY historia asc";
+            string query = "SELECT * FROM historias WHERE flag = '0' ORDER BY hc asc";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             while (reader.Read())
             {
-                /*
-                if (PatientExists(reader))
-                {
-                    ConnectionMySQL.Connect();
-                    ConnectionMySQL.UpdateHC(Helper.GetName(reader.GetValue(1).ToString())[0], Helper.GetName(reader.GetValue(1).ToString())[1], Helper.GetName(reader.GetValue(1).ToString())[2], reader.GetValue(0).ToString(), reader.GetValue(3).ToString());
-                    ConnectionMySQL.Disconnect();
-                }
-                else
-                {
-                    ConnectionMySQL.Connect();
-                    ConnectionMySQL.InsertHC(Helper.GetName(reader.GetValue(1).ToString())[0], Helper.GetName(reader.GetValue(1).ToString())[1], Helper.GetName(reader.GetValue(1).ToString())[2], reader.GetValue(0).ToString(), reader.GetValue(3).ToString());
-                    ConnectionMySQL.Disconnect();
-                }
-                 * */
-                //ConnectionMySQL.InsertProduct(reader.GetValue(0).ToString(), reader.GetString(1));
-                //UpdateAfterInsert("hc", "historia", 0, reader);
-                MessageBox.Show(Helper.GetComplexName(reader.GetValue(1).ToString())[0] + " -- " + Helper.GetComplexName(reader.GetValue(1).ToString())[1]);
+                ConnectionMySQL.Connect();
+                ConnectionMySQL.InsertPatientOther(reader.GetValue(0).ToString(), reader.GetValue(1).ToString(), reader.GetValue(2).ToString());
+                ConnectionMySQL.Disconnect();
+                UpdateAfterInsert("historias", "hc", 0, reader);
+                //MessageBox.Show(Helper.GetComplexName(reader.GetValue(1).ToString())[0] + " -- " + Helper.GetComplexName(reader.GetValue(1).ToString())[1]);
             }
             FinalMessage();
         }

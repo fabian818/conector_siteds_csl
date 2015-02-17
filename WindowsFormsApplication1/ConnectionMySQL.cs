@@ -250,6 +250,25 @@ namespace WindowsFormsApplication1
             }
         }
 
+        public static void InsertPatientOther(string clinic_history_code, string other_name, string document_identity_code)
+        {
+            try
+            {
+                string query = "INSERT INTO patients (clinic_history_code, other_name, document_identity_code, document_identity_type_id) VALUES (@clinic_history_code,@other_name, @document_identity_code, @document_identity_type_id);";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@clinic_history_code", clinic_history_code);
+                command.Parameters.AddWithValue("@other_name", other_name);
+                command.Parameters.AddWithValue("@document_identity_code", document_identity_code);
+                command.Parameters.AddWithValue("@document_identity_type_id", 1);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguieasdasdnte error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
+
         public static void InsertMechanismType(string code, string name)
         {
             try
@@ -662,7 +681,7 @@ namespace WindowsFormsApplication1
                 int id = 0;
                 while (reader.Read())
                 {
-                    id = Convert.ToInt16(reader.GetValue(0));
+                    id = Convert.ToInt32(reader.GetValue(0));
                 }
                 reader.Close();
                 return id;
@@ -687,7 +706,7 @@ namespace WindowsFormsApplication1
                 int id = 0;
                 while (reader.Read())
                 {
-                    id = Convert.ToInt16(reader.GetValue(0));
+                    id = Convert.ToInt32(reader.GetValue(0));
                 }
                 reader.Close();
                 return id;
