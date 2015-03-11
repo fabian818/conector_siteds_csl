@@ -403,7 +403,24 @@ namespace WindowsFormsApplication1
             }
         }
 
-        
+        public static void UpdateCompany(string authorization_code, string ruc)
+        {
+            try
+            {
+                int authorization_id = GetIdFromCode("authorizations", authorization_code);
+                int company_id = GetIdFromCode("companies", ruc, "ruc");
+                string query = "UPDATE insureds i inner join patients p on p.id = i.patient_id inner join authorizations a on a.patient_id = a.id set company_id = @company_id  where a.id = @authorization_id;";
+                MySqlCommand command = new MySqlCommand(query, Conex);
+                command.Parameters.AddWithValue("@company_id", company_id);
+                command.Parameters.AddWithValue("@authorization_id", authorization_id);
+                command.CommandTimeout = 0;
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Se genero el siguiente error: " + ex.Message.ToString().Replace("'", ""));
+            }
+        }
 
         public static void InsertCoverage(string authorization_code, string code, string name, string cop_fijo, string cop_var, string cop_text)
         {
@@ -569,6 +586,8 @@ namespace WindowsFormsApplication1
                 int product_id = GetIdFromCode("products", product_code);
                 int patient_id = GetPatient(name, paternal,maternal,birthday);
                 int money_id = 2;
+                
+
                 string query = "INSERT INTO authorizations (authorization_type_id,product_id,patient_id,money_id,clinic_id,code,date,intern_code, product_code) VALUES (@authorization_type_id,@product_id,@patient_id,@money_id,1,@code,@date,@intern_code,@pacific_product);";
                 MySqlCommand command = new MySqlCommand(query, Conex);
                 command.Parameters.AddWithValue("@product_id", product_id);

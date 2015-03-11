@@ -53,7 +53,7 @@ namespace WindowsFormsApplication1
 
         public static void InsertMysql()
         {
-            InsertMysqlProductPacific();
+            InsertMysqlPatientOther();
             /*
              * 
              * InsertMysqlInsuredAutorization();
@@ -153,7 +153,7 @@ namespace WindowsFormsApplication1
         public static void InsertMysqlPatientOther()
         {
             ConectarHC();
-            string query = "SELECT * FROM historias WHERE flag = '0' ORDER BY hc asc";
+            string query = "SELECT * FROM histories WHERE flag = '0' ORDER BY hc asc";
             OleDbCommand commandselect = new OleDbCommand(query, Conex);
             OleDbDataReader reader = commandselect.ExecuteReader();
             while (reader.Read())
@@ -161,7 +161,7 @@ namespace WindowsFormsApplication1
                 ConnectionMySQL.Connect();
                 ConnectionMySQL.InsertPatientOther(reader.GetValue(0).ToString(), reader.GetValue(1).ToString(), reader.GetValue(2).ToString());
                 ConnectionMySQL.Disconnect();
-                UpdateAfterInsert("historias", "hc", 0, reader);
+                UpdateAfterInsert("histories", "hc", 0, reader);
                 //MessageBox.Show(Helper.GetComplexName(reader.GetValue(1).ToString())[0] + " -- " + Helper.GetComplexName(reader.GetValue(1).ToString())[1]);
             }
             FinalMessage();
@@ -464,6 +464,9 @@ namespace WindowsFormsApplication1
                 string intern_code = GetInternCode();
                 ConnectionMySQL.Connect();
                 ConnectionMySQL.InsertAuthorization(reader.GetString(1), reader.GetString(25), reader.GetString(5), reader.GetString(2), Helper.GetDateTime(reader.GetString(3)), reader.GetString(8), reader.GetString(6), reader.GetString(7), Helper.GetDate(reader.GetString(12)), reader.GetValue(35).ToString(), intern_code, null);
+                ConnectionMySQL.Disconnect();
+                ConnectionMySQL.Connect();
+                ConnectionMySQL.UpdateCompany(reader.GetValue(3).ToString(), reader.GetValue(17).ToString());
                 ConnectionMySQL.Disconnect();
                 UpdateAfterInsert("DatosGenerales", "cAutoCode", 2, reader);
             }
