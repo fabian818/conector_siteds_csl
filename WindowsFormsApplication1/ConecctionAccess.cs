@@ -567,13 +567,13 @@ namespace WindowsFormsApplication1
             while (readerm.Read())
             {
                 string valor = readerm.GetValue(0).ToString();
-                if (valor == "0" || valor == null || valor == "" || Convert.ToInt16(valor) <= 15000)
+                if (valor == "0" || valor == null || valor == "" || Convert.ToInt32(valor) <= 15000)
                 {
                     intern_code = "15001";
                 }
                 else
                 {
-                    intern_code = (Convert.ToInt16(valor) + 1).ToString();
+                    intern_code = (Convert.ToInt32(valor) + 1).ToString();
                 }
             }
             ConnectionMySQL.Disconnect();
