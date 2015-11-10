@@ -826,7 +826,7 @@ namespace WindowsFormsApplication1
             int id = 0;
             while (reader.Read())
             {
-                id = reader.GetInt16(0);
+                id = reader.GetInt32(0);
             } 
             reader.Close();
             return id;
@@ -840,7 +840,7 @@ namespace WindowsFormsApplication1
             int id = 0;
             while (reader.Read())
             {
-                id = reader.GetInt16(0);
+                id = reader.GetInt32(0);
             }
             reader.Close();
             return id;
