@@ -111,7 +111,7 @@ namespace WindowsFormsApplication1
                     ConnectionMySQL.InsertService(Helper.SuavizatingCode(reader.GetValue(0).ToString()),reader.GetString(1),"","");
                     ConnectionMySQL.Disconnect();
                 }
-                ConnectionMySQL.IncludePrice(reader.GetValue(0).ToString(), reader.GetValue(2).ToString(), Convert.ToInt32(reader.GetValue(3).ToString()));
+                ConnectionMySQL.IncludePrice(reader.GetValue(0).ToString(), reader.GetValue(2).ToString(), Convert.ToInt16(reader.GetValue(3).ToString()));
                 UpdateAfterInsert("tarifario", "codigo", 0, reader);
             }
             ConnectionMySQL.Disconnect();
@@ -458,7 +458,7 @@ namespace WindowsFormsApplication1
                 {
                     string clinic_history_code = GetClinicHistoryCode();
                     ConnectionMySQL.Connect();
-                    ConnectionMySQL.InsertInsured(reader.GetString(27), reader.GetString(17), reader.GetString(0), reader.GetString(22), reader.GetString(1), reader.GetString(23), reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetString(11), Helper.GetDate(reader.GetString(12)), reader.GetInt32(13).ToString(), reader.GetString(14).ToString(), Helper.GetDate(reader.GetString(19)), Helper.GetDate(reader.GetString(20)), Helper.GetDate(reader.GetString(21)), reader.GetString(29), "", clinic_history_code);
+                    ConnectionMySQL.InsertInsured(reader.GetString(27), reader.GetString(17), reader.GetString(0), reader.GetString(22), reader.GetString(1), reader.GetString(23), reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetString(11), Helper.GetDate(reader.GetString(12)), reader.GetInt16(13).ToString(), reader.GetString(14).ToString(), Helper.GetDate(reader.GetString(19)), Helper.GetDate(reader.GetString(20)), Helper.GetDate(reader.GetString(21)), reader.GetString(29), "", clinic_history_code);
                     ConnectionMySQL.Disconnect();
                 }
                 string intern_code = GetInternCode();
@@ -492,7 +492,7 @@ namespace WindowsFormsApplication1
                 {
                     string clinic_history_code = GetClinicHistoryCode();
                     ConnectionMySQL.Connect();
-                    ConnectionMySQL.InsertInsuredInsured("5", reader.GetString(24), reader.GetString(0), reader.GetString(32), reader.GetString(1), reader.GetString(35), reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetString(11), Helper.GetDate(reader.GetString(12)), reader.GetInt32(13).ToString(), reader.GetString(14).ToString(), Helper.GetDate("19900101"), Helper.GetDate("19900101"), Helper.GetDate("19900101"), reader.GetString(41), "", clinic_history_code);
+                    ConnectionMySQL.InsertInsuredInsured("5", reader.GetString(24), reader.GetString(0), reader.GetString(32), reader.GetString(1), reader.GetString(35), reader.GetString(6), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetString(11), Helper.GetDate(reader.GetString(12)), reader.GetInt16(13).ToString(), reader.GetString(14).ToString(), Helper.GetDate("19900101"), Helper.GetDate("19900101"), Helper.GetDate("19900101"), reader.GetString(41), "", clinic_history_code);
                     ConnectionMySQL.Disconnect();
                 }
                 string intern_code = GetInternCode();
@@ -613,7 +613,7 @@ namespace WindowsFormsApplication1
 
         public static string GetCode(string table, OleDbDataReader reader)
         {
-            string query2 = "select * from "+table+" where cEntiIden = " + reader.GetInt32(0).ToString();
+            string query2 = "select * from "+table+" where cEntiIden = " + reader.GetInt16(0).ToString();
             OleDbCommand commandselect = new OleDbCommand(query2, Conex);
             OleDbDataReader readers = commandselect.ExecuteReader();
             string code = "";
